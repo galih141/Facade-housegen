@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Front Elevation Prompt Generator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --white:#FFFFFF;
+  --black:#111111;
+  --red:#E1261C;
+  --line:#E4E4E4;
+  --grey:#7A7A7A;
+  --card:#FFFFFF;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--white);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color:var(--black);
+  font-family:'Inter',sans-serif;
+  padding:32px;
+  min-height:100vh;
+}
+
+.wrap{max-width:1180px;margin:0 auto;}
+
+.masthead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  border-bottom:4px solid var(--black);
+  padding-bottom:14px;
+  margin-bottom:26px;
+}
+.masthead h1{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:22px;
+  letter-spacing:0.5px;
+  margin:0 0 4px 0;
+  text-transform:uppercase;
+}
+.masthead h1 span{ color:var(--red); }
+.masthead p{
+  margin:0;
+  color:var(--grey);
+  font-size:13.5px;
+  max-width:520px;
+  line-height:1.5;
+}
+.doc-id{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--red);
+  text-align:right;
+  line-height:1.6;
+  font-weight:600;
+}
+.toolbar{
+  display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;
+}
+.tbtn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  background:var(--white);
+  color:var(--black);
+  border:1.5px solid var(--black);
+  padding:5px 11px;
+  cursor:pointer;
+}
+.tbtn:hover{background:var(--black);color:var(--white);}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:26px;
+  align-items:start;
+}
+@media (max-width:920px){ .grid{grid-template-columns:1fr;} }
+
+.card{
+  background:var(--card);
+  border:2px solid var(--black);
+  box-shadow:6px 6px 0 var(--black);
+  padding:0;
+  margin-bottom:22px;
+  overflow:hidden;
+}
+
+.card h2{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  margin:0;
+  color:var(--white);
+  background:var(--black);
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  user-select:none;
+}
+.card h2:hover{ background:var(--red); }
+.chev{
+  display:inline-block;
+  transition:transform .15s ease;
+  font-size:13px;
+}
+.card.collapsed .chev{ transform:rotate(-90deg); }
+.card-body{
+  padding:22px 24px;
+}
+.card.collapsed .card-body{
+  display:none;
+}
+
+.field{margin-bottom:16px;}
+.field:last-child{margin-bottom:0;}
+.field label{
+  display:block;
+  font-size:11.5px;
+  font-family:'IBM Plex Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  color:var(--black);
+  margin-bottom:6px;
+  font-weight:600;
+}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+select, input[type=text], input[type=number], textarea{
+  width:100%;
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  padding:9px 10px;
+  border:2px solid var(--black);
+  background:var(--white);
+  color:var(--black);
+  border-radius:0;
+}
+select:focus, input:focus, textarea:focus{
+  outline:2px solid var(--red);
+  outline-offset:1px;
+}
+textarea{resize:vertical;min-height:50px;font-family:'Inter',sans-serif;}
+.other-input{margin-top:8px;display:none;}
+
+input[type=range]{width:100%;accent-color:var(--red);}
+.rangeval{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--red);font-weight:600;}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  border:2px solid var(--black);
+  padding:6px 10px;
+  cursor:pointer;
+  user-select:none;
+  background:var(--white);
+  color:var(--black);
+  transition:all .12s ease;
+}
+.chip.active{
+  background:var(--red);
+  border-color:var(--red);
+  color:var(--white);
+}
+
+.colorrow{display:flex;gap:14px;}
+.colorpick{flex:1;}
+.colorpick .swatchline{
+  display:flex;align-items:center;gap:10px;
+  border:2px solid var(--black);
+  padding:6px;
+}
+.colorpick input[type=color]{
+  width:38px;height:38px;border:2px solid var(--black);padding:0;cursor:pointer;background:none;
+}
+.colorpick .cname{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  line-height:1.4;
+}
+.colorpick .cname b{display:block;font-size:12.5px;}
+
+.preview-box{
+  background:var(--white);
+  border:2px solid var(--black);
+  position:relative;
+  padding:18px;
+}
+.stamp-corner{
+  position:absolute;
+  top:10px;
+  right:12px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--white);
+  background:var(--red);
+  padding:3px 8px;
+  transform:rotate(2deg);
+  letter-spacing:0.5px;
+  font-weight:700;
+}
+svg{display:block;margin:0 auto;}
+
+.scale-note{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  color:var(--grey);
+  text-align:center;
+  margin-top:8px;
+  letter-spacing:0.5px;
+}
+
+.output-label{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+}
+.output-label span{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  text-transform:uppercase;
+  color:var(--black);
+  letter-spacing:0.8px;
+  font-weight:700;
+}
+.copybtn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  background:var(--black);
+  color:var(--white);
+  border:2px solid var(--black);
+  padding:6px 14px;
+  cursor:pointer;
+  letter-spacing:0.4px;
+}
+.copybtn:hover{background:var(--red);border-color:var(--red);}
+.copybtn.copied{background:var(--white);color:var(--black);}
+
+pre.output{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:var(--white);
+  border:2px solid var(--black);
+  padding:16px;
+  margin:0;
+  color:var(--black);
+}
+
+.foot-note{
+  font-size:11.5px;
+  color:var(--grey);
+  line-height:1.6;
+  border-top:1px dashed var(--black);
+  padding-top:12px;
+  margin-top:16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <h1>Front Elevation <span>Prompt Generator</span></h1>
+      <p>Builds text-to-image prompts for straight, undistorted building facade references — for 3D texture capture and photogrammetry-style workflows.</p>
+    </div>
+    <div class="doc-id">
+      SHEET&nbsp;A-01<br>
+      VIEW: ELEVATION<br>
+      SCALE: N.T.S.
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="tbtn" id="collapseAll">Collapse All</button>
+    <button class="tbtn" id="expandAll">Expand All</button>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: FORM -->
+    <div>
+      <div class="card" data-card>
+        <h2><span>00 — Art Style</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+          <div class="field">
+            <label>Rendering Style</label>
+            <select id="artStyle">
+              <option value="photorealistic">Photorealistic (best for texture capture)</option>
+              <option value="realistic digital painting">Realistic digital painting</option>
+              <option value="semi-stylized realistic">Stylized realistic</option>
+              <option value="flat vector illustration">Flat illustration</option>
+              <option value="cartoon">Cartoon</option>
+              <option value="chibi">Chibi</option>
+              <option value="anime">Anime</option>
+              <option value="low-poly 3D render">Low-poly 3D</option>
+              <option value="isometric illustration">Isometric</option>
+              <option value="watercolor painting">Watercolor</option>
+              <option value="pixel art">Pixel art</option>
+              <option value="digital concept art / matte painting">Concept art</option>
+              <option value="technical blueprint line art">Blueprint / line art</option>
+              <option value="claymation / stop-motion model">Claymation</option>
+              <option value="papercraft / diorama">Papercraft diorama</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="artStyleOther" class="other-input" placeholder="Describe the art style...">
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>01 — View</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+          <div class="field">
+            <label>Camera View</label>
+            <select id="view">
+              <option value="straight-on frontal elevation view, camera perfectly perpendicular to the front wall, no perspective distortion (orthographic front view)">Straight front</option>
+              <option value="straight-on side elevation view, camera perfectly perpendicular to the side wall, no perspective distortion (orthographic side view)">Straight right (side)</option>
+              <option value="eye-level three-quarter corner view, standing at street level, both the front facade and the side wall visible receding at a natural angle">Eye-level 3/4 (corner)</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="viewOther" class="other-input" placeholder="Describe the camera view...">
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>02 — Building Parameters</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+
+        <div class="field">
+          <label>Region / Architectural Style</label>
+          <select id="style">
+            <option value="Peranakan / Straits-Chinese shophouse">Peranakan / Straits-Chinese shophouse</option>
+            <option value="Chinese shophouse">Chinese shophouse</option>
+            <option value="Dutch colonial Indonesian townhouse">Dutch colonial Indonesian townhouse</option>
+            <option value="Spanish colonial bahay na bato (Philippines)">Spanish colonial bahay na bato (Philippines)</option>
+            <option value="Portuguese colonial townhouse (Macau / Goa)">Portuguese colonial townhouse (Macau / Goa)</option>
+            <option value="French colonial Vietnamese villa">French colonial Vietnamese villa</option>
+            <option value="Vietnamese tube house (nha ong)">Vietnamese tube house (nha ong)</option>
+            <option value="Thai teak wooden house">Thai teak wooden house</option>
+            <option value="British colonial Indian bungalow-front">British colonial Indian bungalow-front</option>
+            <option value="Rajasthani haveli facade">Rajasthani haveli facade</option>
+            <option value="Ottoman / Turkish timber townhouse">Ottoman / Turkish timber townhouse</option>
+            <option value="Balkan Ottoman-era house">Balkan Ottoman-era house</option>
+            <option value="Moroccan / North African riad facade">Moroccan / North African riad facade</option>
+            <option value="Egyptian old-town townhouse">Egyptian old-town townhouse</option>
+            <option value="Ethiopian townhouse">Ethiopian townhouse</option>
+            <option value="Mediterranean / Greek island house">Mediterranean / Greek island house</option>
+            <option value="Italian Renaissance palazzo facade">Italian Renaissance palazzo facade</option>
+            <option value="Parisian Haussmannian apartment building">Parisian Haussmannian apartment building</option>
+            <option value="English Georgian townhouse">English Georgian townhouse</option>
+            <option value="Victorian terrace house">Victorian terrace house</option>
+            <option value="German fachwerk half-timbered house">German fachwerk half-timbered house</option>
+            <option value="Swiss alpine chalet">Swiss alpine chalet</option>
+            <option value="Scandinavian wooden townhouse">Scandinavian wooden townhouse</option>
+            <option value="Russian wooden izba house">Russian wooden izba house</option>
+            <option value="Japanese machiya townhouse">Japanese machiya townhouse</option>
+            <option value="Latin American colonial townhouse">Latin American colonial townhouse</option>
+            <option value="Brazilian colonial townhouse">Brazilian colonial townhouse</option>
+            <option value="New York brownstone">New York brownstone</option>
+            <option value="Californian craftsman house">Californian craftsman house</option>
+            <option value="Modern minimalist facade">Modern minimalist facade</option>
+            <option value="other">Other (type below)</option>
+          </select>
+          <input type="text" id="styleOther" class="other-input" placeholder="Describe custom style...">
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Floors</label>
+            <input type="number" id="floors" min="1" max="6" value="2">
+          </div>
+          <div class="field">
+            <label>Windows per Floor</label>
+            <input type="number" id="windows" min="0" max="6" value="2">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Window Style</label>
+          <select id="windowStyle">
+            <option value="wooden shuttered">Wooden shuttered</option>
+            <option value="louvered jalousie">Louvered jalousie</option>
+            <option value="arched colonial with fanlight">Arched colonial with fanlight</option>
+            <option value="iron security grille">Iron security grille</option>
+            <option value="plain modern glass">Plain modern glass</option>
+            <option value="sash windows">Sash windows</option>
+            <option value="none, blank wall">None / blank wall</option>
+            <option value="other">Other (type below)</option>
+          </select>
+          <input type="text" id="windowStyleOther" class="other-input" placeholder="Describe window style...">
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Ground Floor Type</label>
+            <select id="groundType">
+              <option value="roller-shutter shopfront">Roller-shutter shopfront</option>
+              <option value="wooden double doors">Wooden double doors</option>
+              <option value="garage door">Garage door</option>
+              <option value="residential door and windows">Residential door + windows</option>
+              <option value="open arcade / five-foot way">Open arcade / five-foot way</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="groundTypeOther" class="other-input" placeholder="Describe ground floor...">
+          </div>
+          <div class="field">
+            <label>Ground Floor Doors</label>
+            <input type="number" id="doors" min="1" max="5" value="3">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Wall Material / Finish</label>
+            <select id="material">
+              <option value="painted plaster/stucco">Painted plaster / stucco</option>
+              <option value="exposed brick">Exposed brick</option>
+              <option value="weathered raw concrete">Weathered raw concrete</option>
+              <option value="timber cladding">Timber cladding</option>
+              <option value="painted tile cladding">Painted tile cladding</option>
+              <option value="natural stone">Natural stone</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="materialOther" class="other-input" placeholder="Describe wall material...">
+          </div>
+          <div class="field">
+            <label>Roof / Parapet</label>
+            <select id="roof">
+              <option value="flat parapet with plain cornice">Flat parapet, plain cornice</option>
+              <option value="decorative pediment parapet">Decorative pediment parapet</option>
+              <option value="gable tiled roofline">Gable tiled roofline</option>
+              <option value="flat modern roof edge">Flat modern roof edge</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="roofOther" class="other-input" placeholder="Describe roofline...">
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>03 — Color</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+        <div class="colorrow">
+          <div class="colorpick">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;display:block;margin-bottom:6px;">Wall Color</label>
+            <div class="swatchline">
+              <input type="color" id="wallColor" value="#c9a4c4">
+              <div class="cname"><b id="wallColorName">Dusty pink</b><span id="wallColorHex">#C9A4C4</span></div>
+            </div>
+          </div>
+          <div class="colorpick">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;display:block;margin-bottom:6px;">Door / Trim Color</label>
+            <div class="swatchline">
+              <input type="color" id="trimColor" value="#5b4636">
+              <div class="cname"><b id="trimColorName">Chocolate brown</b><span id="trimColorHex">#5B4636</span></div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>04 — Weathering &amp; Details</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+        <div class="field">
+          <label>Weathering — <span class="rangeval" id="wearVal">Heavily weathered</span></label>
+          <input type="range" id="wear" min="0" max="3" value="2">
+        </div>
+        <div class="field">
+          <label>Extra Details</label>
+          <div class="chips" id="details">
+            <div class="chip active" data-v="tangled overhead wires">overhead wires</div>
+            <div class="chip active" data-v="hand-painted shop signage">shop signage</div>
+            <div class="chip" data-v="water stains and mildew streaks">water stains</div>
+            <div class="chip" data-v="moss and small plants growing on ledges">moss / plants</div>
+            <div class="chip" data-v="peeling paint and cracked plaster">peeling paint</div>
+            <div class="chip" data-v="rusted metal grilles">rust</div>
+            <div class="chip" data-v="wall-mounted air conditioning units">A/C units</div>
+            <div class="chip" data-v="faded graffiti">graffiti</div>
+            <div class="chip" data-v="general grime and grunge buildup on the lower wall">grunge / grime</div>
+            <div class="chip" data-v="sun-bleached and discolored patches">sun-bleached patches</div>
+            <div class="chip" data-v="patched repairs with mismatched material">patched repairs</div>
+            <div class="chip" data-v="exposed wiring conduits and junction boxes">exposed wiring</div>
+            <div class="chip" data-v="cracked and missing floor tiles at the base">cracked tiles</div>
+            <div class="chip" data-v="salt efflorescence stains on lower masonry">salt stains</div>
+            <div class="chip" data-v="faded painted advertisement mural">faded mural</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Other (write your own, added to every field)</label>
+          <textarea id="notes" placeholder="Anything else — setting, street, extra objects, mood..."></textarea>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Lighting</label>
+            <select id="lighting">
+              <option value="flat, even overcast daylight with minimal shadow">Flat even (best for texture)</option>
+              <option value="soft diffused daylight">Soft diffused daylight</option>
+              <option value="warm golden-hour light">Golden hour</option>
+              <option value="overcast studio-like lighting">Overcast studio-like</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="lightingOther" class="other-input" placeholder="Describe lighting...">
+          </div>
+          <div class="field">
+            <label>Aspect Ratio</label>
+            <select id="ratio">
+              <option value="2:3">2:3 portrait</option>
+              <option value="3:4">3:4 portrait</option>
+              <option value="1:1">1:1 square</option>
+              <option value="9:16">9:16 tall</option>
+            </select>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PREVIEW + OUTPUT -->
+    <div>
+      <div class="card" data-card>
+        <h2><span>05 — Elevation Preview</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+        <div class="preview-box">
+          <div class="stamp-corner" id="viewStamp">FRONT VIEW</div>
+          <svg id="svgPreview" width="360" height="340" viewBox="0 0 360 340"></svg>
+          <div class="scale-note">SCHEMATIC ONLY — NOT THE FINAL RENDER</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>06 — Generated Prompt</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+        <div class="output-label">
+          <span>Prompt</span>
+          <button class="copybtn" id="copyPos">Copy</button>
+        </div>
+        <pre class="output" id="posOut"></pre>
+
+        <div class="foot-note">
+          Written for a controlled, undistorted facade capture — the format used when a building image will be projected onto a 3D plane or mesh as a texture. Works with Midjourney, SDXL, Firefly, or similar text-to-image tools.
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const wearLabels=["Pristine / newly painted","Lightly weathered","Heavily weathered","Ruined / abandoned"];
+
+// ---- collapsible cards ----
+document.querySelectorAll('[data-card] h2').forEach(h=>{
+  h.addEventListener('click', ()=> h.closest('.card').classList.toggle('collapsed') );
+});
+$('collapseAll').addEventListener('click', ()=>{
+  document.querySelectorAll('[data-card]').forEach(c=>c.classList.add('collapsed'));
+});
+$('expandAll').addEventListener('click', ()=>{
+  document.querySelectorAll('[data-card]').forEach(c=>c.classList.remove('collapsed'));
+});
+
+// generic "other" toggler
+function wireOther(selectId, otherId){
+  const sel=$(selectId), other=$(otherId);
+  sel.addEventListener('change',()=>{
+    other.style.display = sel.value==='other' ? 'block':'none';
+    update();
+  });
+  other.addEventListener('input',update);
+}
+['artStyle','style','windowStyle','groundType','material','roof','lighting','view'].forEach(id=>wireOther(id, id+'Other'));
+
+function fieldValue(selectId, otherId){
+  const sel=$(selectId);
+  if(sel.value==='other') return $(otherId).value.trim() || sel.options[sel.selectedIndex].text;
+  return sel.value;
+}
+
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{ c.classList.toggle('active'); update(); });
+});
+
+['floors','windows','doors','wear','ratio','notes']
+  .forEach(id=>{ const el=$(id); if(el){ el.addEventListener('input',update); el.addEventListener('change',update); } });
+
+// ---- color naming ----
+const NAMED_COLORS=[
+  ["Ivory","#F5EFDD"],["Cream","#EDE1C0"],["Off-white","#F2F0EA"],["Pale yellow","#F3E3A1"],
+  ["Mustard","#C9A227"],["Ochre","#CC8A2C"],["Sand","#D9C08C"],["Tan","#C2A060"],["Beige","#D6C6A9"],
+  ["Terracotta","#C1663A"],["Brick red","#9B4630"],["Rust","#A5502A"],["Faded red","#B5432D"],
+  ["Maroon","#6E2A2A"],["Burgundy","#5C1F2E"],["Salmon","#E39C8B"],["Coral","#D97862"],
+  ["Dusty pink","#C9A4C4"],["Blush pink","#E6C2C8"],["Pastel purple","#B79ACB"],["Lavender","#C8B6E2"],
+  ["Mauve","#8E6C88"],["Plum","#5E3A56"],["Sky blue","#A8CBE0"],["Powder blue","#C3D9E6"],
+  ["Teal","#3E7C7A"],["Turquoise","#4FB8AE"],["Navy blue","#1F3A5F"],["Cobalt blue","#2255A4"],
+  ["Sage green","#A3B18A"],["Olive green","#6B6E3A"],["Forest green","#2F4A2E"],["Mint green","#B7E4C7"],
+  ["Charcoal grey","#3A3A3A"],["Slate grey","#5B6770"],["Stone grey","#9A9A92"],["Taupe","#8A7B6C"],
+  ["Chocolate brown","#5B4636"],["Walnut brown","#6F4E37"],["Black","#161616"],["White","#FBFBFB"]
+];
+function hexToRgb(hex){
+  const v=hex.replace('#','');
+  return [parseInt(v.slice(0,2),16),parseInt(v.slice(2,4),16),parseInt(v.slice(4,6),16)];
+}
+function nearestColorName(hex){
+  const [r,g,b]=hexToRgb(hex);
+  let best=null,bestD=Infinity;
+  NAMED_COLORS.forEach(([name,h])=>{
+    const [nr,ng,nb]=hexToRgb(h);
+    const d=(r-nr)**2+(g-ng)**2+(b-nb)**2;
+    if(d<bestD){bestD=d;best=name;}
+  });
+  return best;
+}
+function wireColor(inputId,nameId,hexId){
+  const upd=()=>{
+    const hex=$(inputId).value;
+    $(nameId).textContent=nearestColorName(hex);
+    $(hexId).textContent=hex.toUpperCase();
+    update();
+  };
+  $(inputId).addEventListener('input',upd);
+  upd();
+}
+// ---- art style rendering descriptors ----
+const STYLE_DESC={
+  "photorealistic":"Photorealistic, sharp focus, high detail, uniform exposure across the whole facade, natural real-world materials and textures",
+  "realistic digital painting":"Realistic digital painting, natural proportions and lighting, fine surface detail rendered by hand",
+  "semi-stylized realistic":"Stylized-realistic rendering, painterly but grounded detail, natural proportions with slightly simplified surfaces",
+  "flat vector illustration":"Flat vector illustration style, clean bold shapes, minimal shading, limited flat color palette, no gradients",
+  "cartoon":"Cartoon illustration style, bold clean outlines, simplified shapes, saturated flat colors",
+  "chibi":"Chibi style, cute squashed proportions, oversized details, rounded shapes, playful bold outlines",
+  "anime":"Anime illustration style, clean cel-shaded linework, vibrant flat colors, subtle gradient shading",
+  "low-poly 3D render":"Low-poly 3D render style, flat-shaded geometric facets, minimal texture detail, simplified faceted forms",
+  "isometric illustration":"Isometric illustration style, clean geometric shapes, consistent axonometric perspective, flat shading",
+  "watercolor painting":"Watercolor painting style, soft bleeding edges, visible paper texture, muted washes of color",
+  "pixel art":"Pixel art style, limited color palette, visible pixel grid, retro game aesthetic",
+  "digital concept art / matte painting":"Digital concept art / matte painting style, painterly brushwork, dramatic detail and atmosphere",
+  "technical blueprint line art":"Technical blueprint line-art style, monochrome linework on grid paper, architectural drafting aesthetic, no color fill",
+  "claymation / stop-motion model":"Claymation / stop-motion model style, visible fingerprint and sculpting texture, matte clay-like surfaces, soft studio lighting",
+  "papercraft / diorama":"Papercraft diorama style, layered cut-paper shapes, visible paper edges and folds, miniature handcrafted look"
+};
+function artStyleDescriptor(){
+  const sel=$('artStyle');
+  if(sel.value==='other'){
+    const t=$('artStyleOther').value.trim();
+    return t || 'custom art style';
+  }
+  return STYLE_DESC[sel.value] || sel.value;
+}
+
+function drawPreview(floors,winPerFloor,doors,groundType,wallHex,trimHex){
+  const svg=$('svgPreview');
+  const W=360,H=340;
+  const groundY=280, floorH=60, wallX=50, wallW=260;
+  let parts=[];
+  parts.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
+  parts.push(`<line x1="20" y1="${groundY}" x2="${W-20}" y2="${groundY}" stroke="#111111" stroke-width="2"/>`);
+  const topY = groundY - floorH*floors - 14;
+  parts.push(`<rect x="${wallX}" y="${topY}" width="${wallW}" height="${groundY-topY}" fill="${wallHex}" stroke="#111111" stroke-width="2.5"/>`);
+  parts.push(`<rect x="${wallX-6}" y="${topY-10}" width="${wallW+12}" height="10" fill="#111111" stroke="#111111" stroke-width="2"/>`);
+
+  for(let f=0; f<floors; f++){
+    const fy = topY + 10 + f*floorH;
+    const n = Math.max(winPerFloor,0);
+    if(n>0){
+      const gap = wallW/(n+1);
+      for(let i=0;i<n;i++){
+        const wx = wallX + gap*(i+1) - 14;
+        parts.push(`<rect x="${wx}" y="${fy}" width="28" height="34" fill="${trimHex}" stroke="#111111" stroke-width="1.6"/>`);
+        parts.push(`<line x1="${wx+14}" y1="${fy}" x2="${wx+14}" y2="${fy+34}" stroke="#FFFFFF" stroke-width="1.4"/>`);
+      }
+    }
+    if(f>0) parts.push(`<line x1="${wallX}" y1="${fy-10}" x2="${wallX+wallW}" y2="${fy-10}" stroke="#111111" stroke-width="1" stroke-dasharray="3,3"/>`);
+  }
+
+  const gy = groundY-60;
+  const dN=Math.max(doors,1);
+  const gap = wallW/(dN+1);
+  for(let i=0;i<dN;i++){
+    const dx = wallX + gap*(i+1) - 16;
+    const fill = groundType.includes('roller') ? '#E1261C' : trimHex;
+    parts.push(`<rect x="${dx}" y="${gy}" width="32" height="56" fill="${fill}" stroke="#111111" stroke-width="1.8"/>`);
+  }
+
+  svg.innerHTML = parts.join('');
+}
+
+function buildPrompt(){
+  const artDesc=artStyleDescriptor();
+  const view=fieldValue('view','viewOther');
+  const style=fieldValue('style','styleOther');
+  const floors=parseInt($('floors').value)||1;
+  const windows=parseInt($('windows').value)||0;
+  const windowStyle=fieldValue('windowStyle','windowStyleOther');
+  const groundType=fieldValue('groundType','groundTypeOther');
+  const doors=parseInt($('doors').value)||1;
+  const material=fieldValue('material','materialOther');
+  const roof=fieldValue('roof','roofOther');
+  const wallHex=$('wallColor').value;
+  const trimHex=$('trimColor').value;
+  const wallName=nearestColorName(wallHex).toLowerCase();
+  const trimName=nearestColorName(trimHex).toLowerCase();
+  const wear=wearLabels[$('wear').value];
+  $('wearVal').textContent=wear;
+  const lighting=fieldValue('lighting','lightingOther');
+  const ratio=$('ratio').value;
+  const notes=$('notes').value.trim();
+  const details=[...document.querySelectorAll('.chip.active')].map(c=>c.dataset.v);
+
+  const floorWord = floors===1?'single-storey':`${floors}-storey`;
+
+  const stamp=$('viewStamp');
+  const viewSel=$('view');
+  stamp.textContent = viewSel.value.startsWith('straight-on side')?'SIDE VIEW':
+                       viewSel.value.startsWith('eye-level')?'3/4 VIEW':
+                       viewSel.value==='other'?'CUSTOM VIEW':'FRONT VIEW';
+
+  let p = `${artDesc}. A ${view} of a ${floorWord} ${style}. `;
+  p += `Upper floor${floors>1?'s':''}: ${windows>0? `${windows} ${windowStyle} window${windows>1?'s':''} per floor` : `no windows, ${windowStyle}`}, evenly spaced. `;
+  p += `Ground floor: ${groundType}, ${doors} bay${doors>1?'s':''} wide. `;
+  p += `Wall finish: ${material}, painted a shade of ${wallName} (${wallHex.toUpperCase()}), with doors, window frames and trim in ${trimName} (${trimHex.toUpperCase()}). `;
+  p += `Roofline: ${roof}. `;
+  p += `Condition: ${wear.toLowerCase()}`;
+  if(details.length) p += `, with ${details.join(', ')}`;
+  p += `. `;
+  p += `Lighting: ${lighting}. `;
+  p += `Full building visible and not cropped, centered in frame — for use as a 3D texture / photogrammetry reference. `;
+  if(notes) p += `${notes}. `;
+  p += `Aspect ratio ${ratio}.`;
+
+  $('posOut').textContent=p;
+
+  drawPreview(floors,windows,doors,groundType,wallHex,trimHex);
+}
+
+function update(){ buildPrompt(); }
+
+function copyText(btn, text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent;
+    btn.textContent='Copied';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('copied'); },1200);
+  });
+}
+$('copyPos').addEventListener('click',()=>copyText($('copyPos'),$('posOut').textContent));
+
+wireColor('wallColor','wallColorName','wallColorHex');
+wireColor('trimColor','trimColorName','trimColorHex');
+update();
+</script>
+</body>
+</html>
