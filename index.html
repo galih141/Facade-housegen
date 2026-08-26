@@ -377,6 +377,7 @@ pre.output{
             <option value="other">Other (type below)</option>
           </select>
           <input type="text" id="styleOther" class="other-input" placeholder="Describe custom style...">
+          <div class="scale-note" style="text-align:left;margin-top:6px;">Picking a region auto-fills matching window, ground floor, material, roof and color choices below — override any of them afterward if you like.</div>
         </div>
 
         <div class="row2">
@@ -629,16 +630,60 @@ function nearestColorName(hex){
   });
   return best;
 }
-function wireColor(inputId,nameId,hexId){
-  const upd=()=>{
-    const hex=$(inputId).value;
-    $(nameId).textContent=nearestColorName(hex);
-    $(hexId).textContent=hex.toUpperCase();
-    update();
-  };
-  $(inputId).addEventListener('input',upd);
-  upd();
+function syncColorLabel(inputId,nameId,hexId){
+  const hex=$(inputId).value;
+  $(nameId).textContent=nearestColorName(hex);
+  $(hexId).textContent=hex.toUpperCase();
 }
+function wireColor(inputId,nameId,hexId){
+  $(inputId).addEventListener('input',()=>{ syncColorLabel(inputId,nameId,hexId); update(); });
+}
+
+// ---- region presets: keep window/ground floor/material/roof/color consistent with the chosen region ----
+const REGION_PRESETS={
+  "Peranakan / Straits-Chinese shophouse": {windowStyle:"louvered jalousie", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#e3b7c0", trimColor:"#2f4a2e"},
+  "Chinese shophouse": {windowStyle:"wooden shuttered", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#c1663a", trimColor:"#3a2a1e"},
+  "Dutch colonial Indonesian townhouse": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f2f0ea", trimColor:"#2f4a2e"},
+  "Spanish colonial bahay na bato (Philippines)": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"natural stone", roof:"gable tiled roofline", wallColor:"#eeeae0", trimColor:"#6f4e37"},
+  "Portuguese colonial townhouse (Macau / Goa)": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f0c93c", trimColor:"#fbfbfb"},
+  "French colonial Vietnamese villa": {windowStyle:"louvered jalousie", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#cc8a2c", trimColor:"#2f4a2e"},
+  "Vietnamese tube house (nha ong)": {windowStyle:"iron security grille", groundType:"roller-shutter shopfront", material:"painted tile cladding", roof:"flat modern roof edge", wallColor:"#e39c8b", trimColor:"#fbfbfb"},
+  "Thai teak wooden house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6f4e37", trimColor:"#3a2a1e"},
+  "British colonial Indian bungalow-front": {windowStyle:"sash windows", groundType:"residential door and windows", material:"painted plaster/stucco", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#2f4a2e"},
+  "Rajasthani haveli facade": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#cc8a2c", trimColor:"#2255a4"},
+  "Ottoman / Turkish timber townhouse": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#5b4636"},
+  "Balkan Ottoman-era house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#5b4636"},
+  "Moroccan / North African riad facade": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#c1663a", trimColor:"#4fb8ae"},
+  "Egyptian old-town townhouse": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#d9c08c", trimColor:"#5b4636"},
+  "Ethiopian townhouse": {windowStyle:"iron security grille", groundType:"residential door and windows", material:"painted plaster/stucco", roof:"flat modern roof edge", wallColor:"#cc8a2c", trimColor:"#5b4636"},
+  "Mediterranean / Greek island house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#fbfbfb", trimColor:"#2255a4"},
+  "Italian Renaissance palazzo facade": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#d9c08c", trimColor:"#3a3a3a"},
+  "Parisian Haussmannian apartment building": {windowStyle:"sash windows", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#ede1c0", trimColor:"#161616"},
+  "English Georgian townhouse": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"flat parapet with plain cornice", wallColor:"#9b4630", trimColor:"#fbfbfb"},
+  "Victorian terrace house": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"decorative pediment parapet", wallColor:"#9b4630", trimColor:"#ede1c0"},
+  "German fachwerk half-timbered house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#3a2a1e"},
+  "Swiss alpine chalet": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6f4e37", trimColor:"#3a2a1e"},
+  "Scandinavian wooden townhouse": {windowStyle:"plain modern glass", groundType:"residential door and windows", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#9b4630", trimColor:"#fbfbfb"},
+  "Russian wooden izba house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#2255a4", trimColor:"#fbfbfb"},
+  "Japanese machiya townhouse": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#3a3a3a", trimColor:"#161616"},
+  "Latin American colonial townhouse": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#2255a4", trimColor:"#fbfbfb"},
+  "Brazilian colonial townhouse": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"painted tile cladding", roof:"flat parapet with plain cornice", wallColor:"#a8cbe0", trimColor:"#fbfbfb"},
+  "New York brownstone": {windowStyle:"sash windows", groundType:"residential door and windows", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#6f4e37", trimColor:"#161616"},
+  "Californian craftsman house": {windowStyle:"plain modern glass", groundType:"residential door and windows", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6b6e3a", trimColor:"#fbfbfb"},
+  "Modern minimalist facade": {windowStyle:"plain modern glass", groundType:"garage door", material:"weathered raw concrete", roof:"flat modern roof edge", wallColor:"#9a9a92", trimColor:"#161616"}
+};
+function applyRegionPreset(styleValue){
+  const preset=REGION_PRESETS[styleValue];
+  if(!preset) return;
+  if(preset.windowStyle){ $('windowStyle').value=preset.windowStyle; $('windowStyleOther').style.display='none'; }
+  if(preset.groundType){ $('groundType').value=preset.groundType; $('groundTypeOther').style.display='none'; }
+  if(preset.material){ $('material').value=preset.material; $('materialOther').style.display='none'; }
+  if(preset.roof){ $('roof').value=preset.roof; $('roofOther').style.display='none'; }
+  if(preset.wallColor){ $('wallColor').value=preset.wallColor; syncColorLabel('wallColor','wallColorName','wallColorHex'); }
+  if(preset.trimColor){ $('trimColor').value=preset.trimColor; syncColorLabel('trimColor','trimColorName','trimColorHex'); }
+  update();
+}
+$('style').addEventListener('change', ()=>applyRegionPreset($('style').value));
 // ---- art style rendering descriptors ----
 const STYLE_DESC={
   "photorealistic":"Photorealistic, sharp focus, high detail, uniform exposure across the whole facade, natural real-world materials and textures",
@@ -765,6 +810,9 @@ $('copyPos').addEventListener('click',()=>copyText($('copyPos'),$('posOut').text
 
 wireColor('wallColor','wallColorName','wallColorHex');
 wireColor('trimColor','trimColorName','trimColorHex');
+syncColorLabel('wallColor','wallColorName','wallColorHex');
+syncColorLabel('trimColor','trimColorName','trimColorHex');
+applyRegionPreset($('style').value);
 update();
 </script>
 </body>
