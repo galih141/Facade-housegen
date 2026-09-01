@@ -260,6 +260,79 @@ pre.output{
   color:var(--black);
 }
 
+.tabbar{
+  display:flex;
+  gap:0;
+  margin-bottom:16px;
+  border:2px solid var(--black);
+}
+.tab-btn{
+  flex:1;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  background:var(--white);
+  color:var(--black);
+  border:none;
+  padding:12px 10px;
+  cursor:pointer;
+}
+.tab-btn + .tab-btn{ border-left:2px solid var(--black); }
+.tab-btn.active{ background:var(--black); color:var(--white); }
+.tab-btn:not(.active):hover{ background:#f2f0ea; }
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; }
+
+.row-preview-box{ padding:0; overflow:hidden; }
+.row-scroll{ overflow-x:auto; overflow-y:hidden; padding:20px; }
+.row-scroll svg{ display:block; height:260px; width:auto; }
+
+.pack-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+  gap:16px;
+}
+.pack-item{
+  border:2px solid var(--black);
+  background:var(--white);
+  overflow:hidden;
+}
+.pack-item .pack-num{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  background:var(--black);
+  color:var(--white);
+  padding:6px 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.pack-item .pack-num button{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  background:var(--white);
+  color:var(--black);
+  border:1.5px solid var(--white);
+  padding:3px 8px;
+  cursor:pointer;
+}
+.pack-item .pack-num button:hover{ background:var(--red); border-color:var(--red); color:var(--white); }
+.pack-item .pack-num button.copied{ background:var(--red); color:var(--white); }
+.pack-item svg{ display:block; width:100%; height:auto; border-bottom:2px solid var(--black); }
+.pack-item .pack-text{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  line-height:1.5;
+  padding:10px;
+  max-height:120px;
+  overflow-y:auto;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
 .foot-note{
   font-size:11.5px;
   color:var(--grey);
@@ -423,6 +496,23 @@ pre.output{
           </div>
         </div>
 
+        <div class="row2">
+          <div class="field">
+            <label>Facade Width / Proportion</label>
+            <select id="facadeWidth">
+              <option value="narrow single-bay">Narrow single-bay (rowhouse)</option>
+              <option value="standard two-to-three-bay" selected>Standard 2–3 bay (townhouse)</option>
+              <option value="wide multi-bay commercial block">Wide multi-bay (commercial block)</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="facadeWidthOther" class="other-input" placeholder="Describe proportion...">
+          </div>
+          <div class="field">
+            <label>Building / Shop Name (optional)</label>
+            <input type="text" id="shopName" placeholder="e.g. Emporium, Bakery, Chen &amp; Sons...">
+          </div>
+        </div>
+
         <div class="field">
           <label>Window Style</label>
           <select id="windowStyle">
@@ -507,7 +597,111 @@ pre.output{
       </div>
 
       <div class="card" data-card>
-        <h2><span>03 — Color</span><span class="chev">▾</span></h2>
+        <h2><span>03 — Facade Ornamentation</span><span class="chev">▾</span></h2>
+        <div class="card-body">
+
+        <div class="row2">
+          <div class="field">
+            <label>Cornice / Roofline Trim</label>
+            <select id="cornice">
+              <option value="none, plain roofline">None / plain roofline</option>
+              <option value="dentil molding cornice">Dentil molding cornice</option>
+              <option value="decorative bracket cornice">Decorative bracket cornice</option>
+              <option value="ornate carved stone cornice">Ornate carved stone cornice</option>
+              <option value="crenellated parapet">Crenellated parapet</option>
+              <option value="stepped gable parapet">Stepped gable parapet</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="corniceOther" class="other-input" placeholder="Describe cornice...">
+          </div>
+          <div class="field">
+            <label>Pediment / Gable Ornament</label>
+            <select id="pediment">
+              <option value="none">None</option>
+              <option value="triangular pediment above the entrance">Triangular pediment</option>
+              <option value="curved segmental pediment above the entrance">Curved segmental pediment</option>
+              <option value="ornate scrollwork pediment">Ornate scrollwork pediment</option>
+              <option value="stepped Dutch gable">Stepped Dutch gable</option>
+              <option value="decorative cartouche / crest above the facade">Decorative cartouche / crest</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="pedimentOther" class="other-input" placeholder="Describe pediment...">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Columns / Pilasters</label>
+            <select id="columns">
+              <option value="none">None</option>
+              <option value="flat pilasters dividing the bays">Flat pilasters between bays</option>
+              <option value="classical columns flanking the entrance">Classical columns at entrance</option>
+              <option value="twisted barley-sugar columns">Twisted barley-sugar columns</option>
+              <option value="engaged half-columns along the facade">Engaged half-columns</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="columnsOther" class="other-input" placeholder="Describe columns...">
+          </div>
+          <div class="field">
+            <label>Balcony / Railing</label>
+            <select id="balcony">
+              <option value="none">None</option>
+              <option value="wrought-iron Juliet balconies at the upper windows">Wrought-iron Juliet balconies</option>
+              <option value="wooden balcony with a painted railing">Wooden balcony with railing</option>
+              <option value="stone balustrade balcony">Stone balustrade balcony</option>
+              <option value="cast-iron veranda balcony running the width of the facade">Cast-iron veranda balcony</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="balconyOther" class="other-input" placeholder="Describe balcony...">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Entrance Type</label>
+            <select id="entrance">
+              <option value="flush entrance at street level">Flush at street level</option>
+              <option value="raised stoop with a short flight of steps">Raised stoop with steps</option>
+              <option value="columned portico entrance">Columned portico</option>
+              <option value="recessed arched entrance">Recessed arched entrance</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="entranceOther" class="other-input" placeholder="Describe entrance...">
+          </div>
+          <div class="field">
+            <label>Awning</label>
+            <select id="awning">
+              <option value="none">None</option>
+              <option value="striped canvas awning">Striped canvas awning</option>
+              <option value="solid color fabric awning">Solid color fabric awning</option>
+              <option value="scalloped-edge awning">Scalloped-edge awning</option>
+              <option value="metal standing-seam awning canopy">Metal standing-seam canopy</option>
+              <option value="other">Other (type below)</option>
+            </select>
+            <input type="text" id="awningOther" class="other-input" placeholder="Describe awning...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Architectural Extras</label>
+          <div class="chips" id="archExtras">
+            <div class="chip" data-v="a brick chimney">chimney</div>
+            <div class="chip" data-v="dormer windows on the roof">dormer windows</div>
+            <div class="chip" data-v="a small cupola or corner tower">cupola / tower</div>
+            <div class="chip" data-v="a decorative weathervane">weathervane</div>
+            <div class="chip" data-v="a flagpole with a flag">flagpole with flag</div>
+            <div class="chip" data-v="a widow's walk railing along the roofline">widow's walk railing</div>
+            <div class="chip" data-v="stone quoins at the corners">corner quoins</div>
+            <div class="chip" data-v="a string-course band dividing the floors">string-course band</div>
+            <div class="chip" data-v="painted shutters flanking the windows">painted shutters</div>
+            <div class="chip" data-v="window boxes with flowering plants">window boxes / planters</div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="card" data-card>
+        <h2><span>04 — Color</span><span class="chev">▾</span></h2>
         <div class="card-body">
         <div class="colorrow" style="flex-wrap:wrap;">
           <div class="colorpick" style="flex:1 1 150px;">
@@ -545,6 +739,27 @@ pre.output{
               <div class="cname"><b id="accentColorName">Faded red</b><span id="accentColorHex">#E1261C</span></div>
             </div>
           </div>
+          <div class="colorpick" style="flex:1 1 150px;">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;display:block;margin-bottom:6px;">Shutter Color</label>
+            <div class="swatchline">
+              <input type="color" id="shutterColor" value="#2f4a2e">
+              <div class="cname"><b id="shutterColorName">Forest green</b><span id="shutterColorHex">#2F4A2E</span></div>
+            </div>
+          </div>
+          <div class="colorpick" style="flex:1 1 150px;">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;display:block;margin-bottom:6px;">Awning Color</label>
+            <div class="swatchline">
+              <input type="color" id="awningColor" value="#9b4630">
+              <div class="cname"><b id="awningColorName">Brick red</b><span id="awningColorHex">#9B4630</span></div>
+            </div>
+          </div>
+          <div class="colorpick" style="flex:1 1 150px;">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;display:block;margin-bottom:6px;">Awning Stripe Color</label>
+            <div class="swatchline">
+              <input type="color" id="awningStripeColor" value="#fbfbfb">
+              <div class="cname"><b id="awningStripeColorName">White</b><span id="awningStripeColorHex">#FBFBFB</span></div>
+            </div>
+          </div>
         </div>
         <div class="field" style="margin-top:16px;margin-bottom:0;">
           <button class="tbtn" id="randomizeColors" style="width:100%;padding:10px;">🎲 Randomize All Colors</button>
@@ -553,7 +768,7 @@ pre.output{
       </div>
 
       <div class="card" data-card>
-        <h2><span>04 — Weathering &amp; Details</span><span class="chev">▾</span></h2>
+        <h2><span>05 — Weathering &amp; Details</span><span class="chev">▾</span></h2>
         <div class="card-body">
         <div class="field">
           <label>Weathering — <span class="rangeval" id="wearVal">Heavily weathered</span></label>
@@ -611,29 +826,86 @@ pre.output{
 
     <!-- RIGHT: PREVIEW + OUTPUT -->
     <div>
-      <div class="card" data-card>
-        <h2><span>05 — Elevation Preview</span><span class="chev">▾</span></h2>
-        <div class="card-body">
-        <div class="preview-box">
-          <div class="stamp-corner" id="viewStamp">FRONT VIEW</div>
-          <svg id="svgPreview" width="360" height="340" viewBox="0 0 360 340"></svg>
-          <div class="scale-note">SCHEMATIC ONLY — NOT THE FINAL RENDER</div>
+      <div class="tabbar" id="outputTabs">
+        <button type="button" class="tab-btn active" data-tab="single">Single Building</button>
+        <button type="button" class="tab-btn" data-tab="multi">Multiple Buildings</button>
+      </div>
+
+      <div class="tab-panel active" id="panelSingle">
+        <div class="card" data-card>
+          <h2><span>06 — Elevation Preview</span><span class="chev">▾</span></h2>
+          <div class="card-body">
+          <div class="preview-box">
+            <div class="stamp-corner" id="viewStamp">FRONT VIEW</div>
+            <svg id="svgPreview" width="360" height="340" viewBox="0 0 360 340"></svg>
+            <div class="scale-note">SCHEMATIC ONLY — NOT THE FINAL RENDER</div>
+          </div>
+          </div>
         </div>
+
+        <div class="card" data-card>
+          <h2><span>07 — Generated Prompt</span><span class="chev">▾</span></h2>
+          <div class="card-body">
+          <div class="output-label">
+            <span>Prompt</span>
+            <button class="copybtn" id="copyPos">Copy</button>
+          </div>
+          <pre class="output" id="posOut"></pre>
+
+          <div class="foot-note">
+            Written for a controlled, undistorted facade capture — the format used when a building image will be projected onto a 3D plane or mesh as a texture. Works with Midjourney, SDXL, Firefly, or similar text-to-image tools.
+          </div>
+          </div>
         </div>
       </div>
 
-      <div class="card" data-card>
-        <h2><span>06 — Generated Prompt</span><span class="chev">▾</span></h2>
-        <div class="card-body">
-        <div class="output-label">
-          <span>Prompt</span>
-          <button class="copybtn" id="copyPos">Copy</button>
+      <div class="tab-panel" id="panelMulti">
+        <div class="card" data-card>
+          <h2><span>06 — Row Setup</span><span class="chev">▾</span></h2>
+          <div class="card-body">
+          <div class="scale-note" style="text-align:left;margin-bottom:14px;">
+            Generates ONE prompt describing all buildings side by side in a single continuous row — sharing the current Region/Style, building type and material as a template, but varied in color and ornament from building to building, like a row of storefronts on one street sheet.
+          </div>
+          <div class="field">
+            <label>Row Size</label>
+            <div class="chips" id="rowSizeChips">
+              <div class="chip" data-v="3">3</div>
+              <div class="chip active" data-v="5">5</div>
+              <div class="chip" data-v="7">7</div>
+              <div class="chip" data-v="10">10</div>
+            </div>
+            <input type="number" id="rowSizeCustom" min="2" max="16" placeholder="Custom count..." style="margin-top:8px;">
+          </div>
+          <div class="field">
+            <label>Vary</label>
+            <div class="chips" id="packVary">
+              <div class="chip active" data-v="colors">colors</div>
+              <div class="chip active" data-v="ornament">ornamentation</div>
+              <div class="chip active" data-v="massing">floors / windows</div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:4px;">
+            <button class="tbtn" id="generateRow" style="width:100%;padding:11px;">Generate Row of Buildings</button>
+          </div>
+          </div>
         </div>
-        <pre class="output" id="posOut"></pre>
 
-        <div class="foot-note">
-          Written for a controlled, undistorted facade capture — the format used when a building image will be projected onto a 3D plane or mesh as a texture. Works with Midjourney, SDXL, Firefly, or similar text-to-image tools.
-        </div>
+        <div class="card" data-card>
+          <h2><span>07 — Row Preview &amp; Prompt</span><span class="chev">▾</span></h2>
+          <div class="card-body">
+          <div class="preview-box row-preview-box" id="rowPreviewWrap" style="display:none;">
+            <div class="row-scroll"><svg id="rowSvgPreview" viewBox="0 0 1000 340"></svg></div>
+            <div class="scale-note">SCHEMATIC ONLY — NOT THE FINAL RENDER · scroll to see full row</div>
+          </div>
+          <div class="output-label" style="margin-top:14px;">
+            <span id="rowCountLabel">Prompt</span>
+            <button class="copybtn" id="copyRowOut">Copy</button>
+          </div>
+          <pre class="output" id="rowOut"></pre>
+          <div class="foot-note">
+            Describes the whole row as one image so the buildings render adjoining, at the same baseline, in a single generation — no manual stitching needed.
+          </div>
+          </div>
         </div>
       </div>
     </div>
@@ -664,7 +936,8 @@ function wireOther(selectId, otherId){
   });
   other.addEventListener('input',update);
 }
-['artStyle','buildingType','style','windowStyle','groundType','material','roof','lighting','view'].forEach(id=>wireOther(id, id+'Other'));
+['artStyle','buildingType','style','windowStyle','groundType','material','roof','lighting','view',
+ 'facadeWidth','cornice','pediment','columns','balcony','entrance','awning'].forEach(id=>wireOther(id, id+'Other'));
 
 function fieldValue(selectId, otherId){
   const sel=$(selectId);
@@ -676,7 +949,7 @@ document.querySelectorAll('.chip').forEach(c=>{
   c.addEventListener('click',()=>{ c.classList.toggle('active'); update(); });
 });
 
-['floors','windows','doors','wear','ratio','notes']
+['floors','windows','doors','wear','ratio','notes','shopName']
   .forEach(id=>{ const el=$(id); if(el){ el.addEventListener('input',update); el.addEventListener('change',update); } });
 
 // ---- color naming ----
@@ -717,11 +990,11 @@ function wireColor(inputId,nameId,hexId){
 
 // ---- region presets: keep window/ground floor/material/roof/color consistent with the chosen region ----
 const REGION_PRESETS={
-  "Peranakan / Straits-Chinese shophouse": {windowStyle:"louvered jalousie", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#e3b7c0", trimColor:"#2f4a2e"},
-  "Chinese shophouse": {windowStyle:"wooden shuttered", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#c1663a", trimColor:"#3a2a1e"},
+  "Peranakan / Straits-Chinese shophouse": {windowStyle:"louvered jalousie", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#e3b7c0", trimColor:"#2f4a2e", cornice:"ornate carved stone cornice", pediment:"decorative cartouche / crest above the facade", columns:"flat pilasters dividing the bays", balcony:"cast-iron veranda balcony running the width of the facade", entrance:"flush entrance at street level", awning:"striped canvas awning"},
+  "Chinese shophouse": {windowStyle:"wooden shuttered", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#c1663a", trimColor:"#3a2a1e", cornice:"decorative bracket cornice", pediment:"none", columns:"flat pilasters dividing the bays", balcony:"cast-iron veranda balcony running the width of the facade", entrance:"flush entrance at street level", awning:"striped canvas awning"},
   "Indonesian Pecinan (Chinatown) shophouse": {windowStyle:"louvered jalousie", groundType:"roller-shutter shopfront", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#9b4630", trimColor:"#cc8a2c"},
   "Indonesian modern ruko (shop-house)": {windowStyle:"plain modern glass", groundType:"roller-shutter shopfront", material:"painted tile cladding", roof:"flat modern roof edge", wallColor:"#9a9a92", trimColor:"#161616"},
-  "Indonesian Art Deco building": {windowStyle:"casement window", groundType:"residential door and windows", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f2f0ea", trimColor:"#161616"},
+  "Indonesian Art Deco building": {windowStyle:"casement window", groundType:"residential door and windows", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f2f0ea", trimColor:"#161616", cornice:"stepped gable parapet", pediment:"decorative cartouche / crest above the facade", columns:"flat pilasters dividing the bays", balcony:"none", entrance:"flush entrance at street level", awning:"none"},
   "Javanese joglo house": {windowStyle:"wooden lattice / kerawang carved window", groundType:"carved wooden gate", material:"timber cladding", roof:"traditional joglo pyramid roof", wallColor:"#d9c08c", trimColor:"#3a2a1e"},
   "Betawi rumah kebaya": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#2f4a2e"},
   "Sundanese traditional house": {windowStyle:"wooden shuttered", groundType:"raised stilt entrance with steps", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#d9c08c", trimColor:"#5b4636"},
@@ -730,8 +1003,8 @@ const REGION_PRESETS={
   "Toraja tongkonan": {windowStyle:"wooden lattice / kerawang carved window", groundType:"raised stilt entrance with steps", material:"timber cladding", roof:"curved horn-shaped roof (Minangkabau-style)", wallColor:"#3a2a1e", trimColor:"#9b4630"},
   "Dayak longhouse (Kalimantan)": {windowStyle:"wooden shuttered", groundType:"raised stilt entrance with steps", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6f4e37", trimColor:"#3a2a1e"},
   "Papuan honai house": {windowStyle:"none, blank wall", groundType:"carved wooden gate", material:"woven bamboo (bilik) panel", roof:"thatched roof (traditional)", wallColor:"#6f4e37", trimColor:"#3a2a1e"},
-  "Dutch colonial Indonesian townhouse": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f2f0ea", trimColor:"#2f4a2e"},
-  "Spanish colonial bahay na bato (Philippines)": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"natural stone", roof:"gable tiled roofline", wallColor:"#eeeae0", trimColor:"#6f4e37"},
+  "Dutch colonial Indonesian townhouse": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f2f0ea", trimColor:"#2f4a2e", cornice:"dentil molding cornice", pediment:"triangular pediment above the entrance", columns:"classical columns flanking the entrance", balcony:"none", entrance:"columned portico entrance", awning:"none"},
+  "Spanish colonial bahay na bato (Philippines)": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"natural stone", roof:"gable tiled roofline", wallColor:"#eeeae0", trimColor:"#6f4e37", cornice:"decorative bracket cornice", pediment:"none", columns:"none", balcony:"wooden balcony with a painted railing", entrance:"flush entrance at street level", awning:"none"},
   "Portuguese colonial townhouse (Macau / Goa)": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#f0c93c", trimColor:"#fbfbfb"},
   "French colonial Vietnamese villa": {windowStyle:"louvered jalousie", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#cc8a2c", trimColor:"#2f4a2e"},
   "Vietnamese tube house (nha ong)": {windowStyle:"iron security grille", groundType:"roller-shutter shopfront", material:"painted tile cladding", roof:"flat modern roof edge", wallColor:"#e39c8b", trimColor:"#fbfbfb"},
@@ -743,11 +1016,11 @@ const REGION_PRESETS={
   "Moroccan / North African riad facade": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#c1663a", trimColor:"#4fb8ae"},
   "Egyptian old-town townhouse": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#d9c08c", trimColor:"#5b4636"},
   "Ethiopian townhouse": {windowStyle:"iron security grille", groundType:"residential door and windows", material:"painted plaster/stucco", roof:"flat modern roof edge", wallColor:"#cc8a2c", trimColor:"#5b4636"},
-  "Mediterranean / Greek island house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#fbfbfb", trimColor:"#2255a4"},
-  "Italian Renaissance palazzo facade": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#d9c08c", trimColor:"#3a3a3a"},
-  "Parisian Haussmannian apartment building": {windowStyle:"sash windows", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#ede1c0", trimColor:"#161616"},
-  "English Georgian townhouse": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"flat parapet with plain cornice", wallColor:"#9b4630", trimColor:"#fbfbfb"},
-  "Victorian terrace house": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"decorative pediment parapet", wallColor:"#9b4630", trimColor:"#ede1c0"},
+  "Mediterranean / Greek island house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#fbfbfb", trimColor:"#2255a4", cornice:"none, plain roofline", pediment:"none", columns:"none", balcony:"wrought-iron Juliet balconies at the upper windows", entrance:"flush entrance at street level", awning:"none"},
+  "Italian Renaissance palazzo facade": {windowStyle:"arched colonial with fanlight", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#d9c08c", trimColor:"#3a3a3a", cornice:"ornate carved stone cornice", pediment:"none", columns:"engaged half-columns along the facade", balcony:"stone balustrade balcony", entrance:"columned portico entrance", awning:"none"},
+  "Parisian Haussmannian apartment building": {windowStyle:"sash windows", groundType:"wooden double doors", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#ede1c0", trimColor:"#161616", cornice:"ornate carved stone cornice", pediment:"none", columns:"engaged half-columns along the facade", balcony:"wrought-iron Juliet balconies at the upper windows", entrance:"flush entrance at street level", awning:"none"},
+  "English Georgian townhouse": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"flat parapet with plain cornice", wallColor:"#9b4630", trimColor:"#fbfbfb", cornice:"dentil molding cornice", pediment:"triangular pediment above the entrance", columns:"flat pilasters dividing the bays", balcony:"none", entrance:"raised stoop with a short flight of steps", awning:"none"},
+  "Victorian terrace house": {windowStyle:"sash windows", groundType:"residential door and windows", material:"exposed brick", roof:"decorative pediment parapet", wallColor:"#9b4630", trimColor:"#ede1c0", cornice:"decorative bracket cornice", pediment:"ornate scrollwork pediment", columns:"none", balcony:"wrought-iron Juliet balconies at the upper windows", entrance:"raised stoop with a short flight of steps", awning:"striped canvas awning"},
   "German fachwerk half-timbered house": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#f2f0ea", trimColor:"#3a2a1e"},
   "Swiss alpine chalet": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6f4e37", trimColor:"#3a2a1e"},
   "Scandinavian wooden townhouse": {windowStyle:"plain modern glass", groundType:"residential door and windows", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#9b4630", trimColor:"#fbfbfb"},
@@ -755,8 +1028,8 @@ const REGION_PRESETS={
   "Japanese machiya townhouse": {windowStyle:"wooden shuttered", groundType:"wooden double doors", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#3a3a3a", trimColor:"#161616"},
   "Latin American colonial townhouse": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"painted plaster/stucco", roof:"flat parapet with plain cornice", wallColor:"#2255a4", trimColor:"#fbfbfb"},
   "Brazilian colonial townhouse": {windowStyle:"iron security grille", groundType:"wooden double doors", material:"painted tile cladding", roof:"flat parapet with plain cornice", wallColor:"#a8cbe0", trimColor:"#fbfbfb"},
-  "New York brownstone": {windowStyle:"sash windows", groundType:"residential door and windows", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#6f4e37", trimColor:"#161616"},
-  "Californian craftsman house": {windowStyle:"plain modern glass", groundType:"residential door and windows", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6b6e3a", trimColor:"#fbfbfb"},
+  "New York brownstone": {windowStyle:"sash windows", groundType:"residential door and windows", material:"natural stone", roof:"flat parapet with plain cornice", wallColor:"#6f4e37", trimColor:"#161616", cornice:"decorative bracket cornice", pediment:"none", columns:"none", balcony:"none", entrance:"raised stoop with a short flight of steps", awning:"none"},
+  "Californian craftsman house": {windowStyle:"plain modern glass", groundType:"residential door and windows", material:"timber cladding", roof:"gable tiled roofline", wallColor:"#6b6e3a", trimColor:"#fbfbfb", cornice:"decorative bracket cornice", pediment:"none", columns:"classical columns flanking the entrance", balcony:"none", entrance:"columned portico entrance", awning:"none"},
   "Modern minimalist facade": {windowStyle:"plain modern glass", groundType:"garage door", material:"weathered raw concrete", roof:"flat modern roof edge", wallColor:"#9a9a92", trimColor:"#161616"},
   "Contemporary glass-box building": {windowStyle:"plain modern glass", groundType:"sliding glass door", material:"glass curtain wall", roof:"flat modern roof edge", wallColor:"#c3d9e6", trimColor:"#161616"},
   "Brutalist concrete building": {windowStyle:"plain modern glass", groundType:"garage door", material:"weathered raw concrete", roof:"flat modern roof edge", wallColor:"#5b6770", trimColor:"#161616"}
@@ -770,6 +1043,12 @@ function applyRegionPreset(styleValue){
   if(preset.roof){ $('roof').value=preset.roof; $('roofOther').style.display='none'; }
   if(preset.wallColor){ $('wallColor').value=preset.wallColor; syncColorLabel('wallColor','wallColorName','wallColorHex'); }
   if(preset.trimColor){ $('trimColor').value=preset.trimColor; syncColorLabel('trimColor','trimColorName','trimColorHex'); }
+  if(preset.cornice){ $('cornice').value=preset.cornice; $('corniceOther').style.display='none'; }
+  if(preset.pediment){ $('pediment').value=preset.pediment; $('pedimentOther').style.display='none'; }
+  if(preset.columns){ $('columns').value=preset.columns; $('columnsOther').style.display='none'; }
+  if(preset.balcony){ $('balcony').value=preset.balcony; $('balconyOther').style.display='none'; }
+  if(preset.entrance){ $('entrance').value=preset.entrance; $('entranceOther').style.display='none'; }
+  if(preset.awning){ $('awning').value=preset.awning; $('awningOther').style.display='none'; }
   update();
 }
 $('style').addEventListener('change', ()=>applyRegionPreset($('style').value));
@@ -800,8 +1079,9 @@ function artStyleDescriptor(){
   return STYLE_DESC[sel.value] || sel.value;
 }
 
-function drawPreview(floors,winPerFloor,doors,groundType,wallHex,trimHex,windowFrameHex,roofHex,accentHex){
-  const svg=$('svgPreview');
+function buildFacadeSVGInner(o){
+  const {floors,winPerFloor,doors,groundType,wallHex,trimHex,windowFrameHex,roofHex,accentHex,
+         shutterHex,awningHex,awningStripeHex,cornice,balcony,awning,shutters}=o;
   const W=360,H=340;
   const groundY=280, floorH=60, wallX=50, wallW=260;
   let parts=[];
@@ -809,7 +1089,13 @@ function drawPreview(floors,winPerFloor,doors,groundType,wallHex,trimHex,windowF
   parts.push(`<line x1="20" y1="${groundY}" x2="${W-20}" y2="${groundY}" stroke="#111111" stroke-width="2"/>`);
   const topY = groundY - floorH*floors - 14;
   parts.push(`<rect x="${wallX}" y="${topY}" width="${wallW}" height="${groundY-topY}" fill="${wallHex}" stroke="#111111" stroke-width="2.5"/>`);
+
+  // cornice band — thicker / doubled if an ornate cornice is selected
+  const corniceOrnate = cornice && !cornice.startsWith('none');
   parts.push(`<rect x="${wallX-6}" y="${topY-10}" width="${wallW+12}" height="10" fill="${roofHex}" stroke="#111111" stroke-width="2"/>`);
+  if(corniceOrnate){
+    parts.push(`<rect x="${wallX-10}" y="${topY-16}" width="${wallW+20}" height="6" fill="${roofHex}" stroke="#111111" stroke-width="1.6"/>`);
+  }
 
   for(let f=0; f<floors; f++){
     const fy = topY + 10 + f*floorH;
@@ -820,13 +1106,33 @@ function drawPreview(floors,winPerFloor,doors,groundType,wallHex,trimHex,windowF
         const wx = wallX + gap*(i+1) - 14;
         parts.push(`<rect x="${wx}" y="${fy}" width="28" height="34" fill="${windowFrameHex}" stroke="#111111" stroke-width="1.6"/>`);
         parts.push(`<line x1="${wx+14}" y1="${fy}" x2="${wx+14}" y2="${fy+34}" stroke="#FFFFFF" stroke-width="1.4"/>`);
+        if(shutters){
+          parts.push(`<rect x="${wx-7}" y="${fy}" width="6" height="34" fill="${shutterHex}" stroke="#111111" stroke-width="1.2"/>`);
+          parts.push(`<rect x="${wx+29}" y="${fy}" width="6" height="34" fill="${shutterHex}" stroke="#111111" stroke-width="1.2"/>`);
+        }
+      }
+      // balcony rail beneath upper-floor windows
+      if(balcony && balcony!=='none' && f>0){
+        parts.push(`<line x1="${wallX+gap-14}" y1="${fy+38}" x2="${wallX+wallW-gap+14}" y2="${fy+38}" stroke="${trimHex}" stroke-width="2.4"/>`);
       }
     }
     if(f>0) parts.push(`<line x1="${wallX}" y1="${fy-10}" x2="${wallX+wallW}" y2="${fy-10}" stroke="#111111" stroke-width="1" stroke-dasharray="3,3"/>`);
   }
 
-  // signage stripe above ground floor, using the accent color
-  parts.push(`<rect x="${wallX+8}" y="${groundY-70}" width="${wallW-16}" height="8" fill="${accentHex}" stroke="#111111" stroke-width="1.2"/>`);
+  if(awning && awning!=='none'){
+    // striped canvas awning above the ground floor
+    const ay=groundY-78, aw=wallW-16, ax=wallX+8, ah=16;
+    parts.push(`<rect x="${ax}" y="${ay}" width="${aw}" height="${ah}" fill="${awningHex}" stroke="#111111" stroke-width="1.6"/>`);
+    const stripes=6;
+    for(let i=0;i<stripes;i+=2){
+      const sx=ax+(aw/stripes)*i;
+      parts.push(`<rect x="${sx}" y="${ay}" width="${aw/stripes}" height="${ah}" fill="${awningStripeHex}"/>`);
+    }
+    parts.push(`<line x1="${ax}" y1="${ay+ah}" x2="${ax+aw}" y2="${ay+ah}" stroke="#111111" stroke-width="1.6"/>`);
+  } else {
+    // plain signage stripe above ground floor, using the accent color
+    parts.push(`<rect x="${wallX+8}" y="${groundY-70}" width="${wallW-16}" height="8" fill="${accentHex}" stroke="#111111" stroke-width="1.2"/>`);
+  }
 
   const gy = groundY-60;
   const dN=Math.max(doors,1);
@@ -837,64 +1143,112 @@ function drawPreview(floors,winPerFloor,doors,groundType,wallHex,trimHex,windowF
     parts.push(`<rect x="${dx}" y="${gy}" width="32" height="56" fill="${fill}" stroke="#111111" stroke-width="1.8"/>`);
   }
 
-  svg.innerHTML = parts.join('');
+  return parts.join('');
+}
+
+function drawPreview(o){
+  $('svgPreview').innerHTML = buildFacadeSVGInner(o);
+}
+
+
+function collectState(){
+  return {
+    artDesc: artStyleDescriptor(),
+    view: fieldValue('view','viewOther'),
+    buildingType: fieldValue('buildingType','buildingTypeOther'),
+    style: fieldValue('style','styleOther'),
+    floors: parseInt($('floors').value)||1,
+    windows: parseInt($('windows').value)||0,
+    windowStyle: fieldValue('windowStyle','windowStyleOther'),
+    facadeWidth: fieldValue('facadeWidth','facadeWidthOther'),
+    shopName: $('shopName').value.trim(),
+    groundType: fieldValue('groundType','groundTypeOther'),
+    doors: parseInt($('doors').value)||1,
+    material: fieldValue('material','materialOther'),
+    roof: fieldValue('roof','roofOther'),
+    cornice: fieldValue('cornice','corniceOther'),
+    pediment: fieldValue('pediment','pedimentOther'),
+    columns: fieldValue('columns','columnsOther'),
+    balcony: fieldValue('balcony','balconyOther'),
+    entrance: fieldValue('entrance','entranceOther'),
+    awning: fieldValue('awning','awningOther'),
+    wallHex: $('wallColor').value,
+    trimHex: $('trimColor').value,
+    windowFrameHex: $('windowFrameColor').value,
+    roofHex: $('roofColor').value,
+    accentHex: $('accentColor').value,
+    shutterHex: $('shutterColor').value,
+    awningHex: $('awningColor').value,
+    awningStripeHex: $('awningStripeColor').value,
+    wear: wearLabels[$('wear').value],
+    lighting: fieldValue('lighting','lightingOther'),
+    ratio: $('ratio').value,
+    notes: $('notes').value.trim(),
+    details: [...document.querySelectorAll('#details .chip.active')].map(c=>c.dataset.v),
+    extras: [...document.querySelectorAll('#archExtras .chip.active')].map(c=>c.dataset.v)
+  };
+}
+
+function buildPromptFromState(s){
+  const wallName=nearestColorName(s.wallHex).toLowerCase();
+  const trimName=nearestColorName(s.trimHex).toLowerCase();
+  const windowFrameName=nearestColorName(s.windowFrameHex).toLowerCase();
+  const roofName=nearestColorName(s.roofHex).toLowerCase();
+  const accentName=nearestColorName(s.accentHex).toLowerCase();
+  const shutters = s.extras.includes('painted shutters flanking the windows');
+  const floorWord = s.floors===1?'single-storey':`${s.floors}-storey`;
+
+  let p = `${s.artDesc}. A ${s.view} of a ${floorWord}, ${s.facadeWidth} ${s.buildingType}. `;
+  p += `Architectural style: ${s.style}. `;
+  p += `Upper floor${s.floors>1?'s':''}: ${s.windows>0? `${s.windows} ${s.windowStyle} window${s.windows>1?'s':''} per floor` : `no windows, ${s.windowStyle}`}, evenly spaced`;
+  if(shutters) p += `, flanked by painted shutters in a shade of ${nearestColorName(s.shutterHex).toLowerCase()} (${s.shutterHex.toUpperCase()})`;
+  p += `. `;
+  p += `Ground floor: ${s.groundType}, ${s.doors} bay${s.doors>1?'s':''} wide, entrance type: ${s.entrance}. `;
+  if(s.awning && s.awning!=='none'){
+    p += `${s.awning.charAt(0).toUpperCase()+s.awning.slice(1)} over the ground floor, awning color ${nearestColorName(s.awningHex).toLowerCase()} (${s.awningHex.toUpperCase()}) with ${nearestColorName(s.awningStripeHex).toLowerCase()} (${s.awningStripeHex.toUpperCase()}) accents. `;
+  }
+  if(s.shopName){
+    p += `A hand-painted or lettered sign reading "${s.shopName}" above the entrance. `;
+  }
+  p += `Wall finish: ${s.material}, painted a shade of ${wallName} (${s.wallHex.toUpperCase()}). `;
+  p += `Door color: ${trimName} (${s.trimHex.toUpperCase()}). Window frame color: ${windowFrameName} (${s.windowFrameHex.toUpperCase()}). Roof color: ${roofName} (${s.roofHex.toUpperCase()}). Accent/signage color: ${accentName} (${s.accentHex.toUpperCase()}). `;
+  p += `Roofline: ${s.roof}`;
+  if(s.cornice && !s.cornice.startsWith('none')) p += `, with a ${s.cornice}`;
+  p += `. `;
+  const ornamentBits=[];
+  if(s.pediment && s.pediment!=='none') ornamentBits.push(s.pediment);
+  if(s.columns && s.columns!=='none') ornamentBits.push(s.columns);
+  if(s.balcony && s.balcony!=='none') ornamentBits.push(s.balcony);
+  if(ornamentBits.length) p += `Facade ornamentation: ${ornamentBits.join(', ')}. `;
+  const allExtras=[...s.extras.filter(e=>e!=='painted shutters flanking the windows'), ...s.details];
+  p += `Condition: ${s.wear.toLowerCase()}`;
+  if(allExtras.length) p += `, with ${allExtras.join(', ')}`;
+  p += `. `;
+  p += `Lighting: ${s.lighting}. `;
+  p += `Full building visible and not cropped, centered in frame — for use as a 3D texture / photogrammetry reference. `;
+  if(s.notes) p += `${s.notes}. `;
+  p += `Aspect ratio ${s.ratio}.`;
+  return p;
 }
 
 function buildPrompt(){
-  const artDesc=artStyleDescriptor();
-  const view=fieldValue('view','viewOther');
-  const buildingType=fieldValue('buildingType','buildingTypeOther');
-  const style=fieldValue('style','styleOther');
-  const floors=parseInt($('floors').value)||1;
-  const windows=parseInt($('windows').value)||0;
-  const windowStyle=fieldValue('windowStyle','windowStyleOther');
-  const groundType=fieldValue('groundType','groundTypeOther');
-  const doors=parseInt($('doors').value)||1;
-  const material=fieldValue('material','materialOther');
-  const roof=fieldValue('roof','roofOther');
-  const wallHex=$('wallColor').value;
-  const trimHex=$('trimColor').value;
-  const windowFrameHex=$('windowFrameColor').value;
-  const roofHex=$('roofColor').value;
-  const accentHex=$('accentColor').value;
-  const wallName=nearestColorName(wallHex).toLowerCase();
-  const trimName=nearestColorName(trimHex).toLowerCase();
-  const windowFrameName=nearestColorName(windowFrameHex).toLowerCase();
-  const roofName=nearestColorName(roofHex).toLowerCase();
-  const accentName=nearestColorName(accentHex).toLowerCase();
-  const wear=wearLabels[$('wear').value];
-  $('wearVal').textContent=wear;
-  const lighting=fieldValue('lighting','lightingOther');
-  const ratio=$('ratio').value;
-  const notes=$('notes').value.trim();
-  const details=[...document.querySelectorAll('.chip.active')].map(c=>c.dataset.v);
-
-  const floorWord = floors===1?'single-storey':`${floors}-storey`;
-
+  $('wearVal').textContent = wearLabels[$('wear').value];
   const stamp=$('viewStamp');
   const viewSel=$('view');
   stamp.textContent = viewSel.value.startsWith('straight-on side')?'SIDE VIEW':
                        viewSel.value.startsWith('eye-level')?'3/4 VIEW':
                        viewSel.value==='other'?'CUSTOM VIEW':'FRONT VIEW';
 
-  let p = `${artDesc}. A ${view} of a ${floorWord} ${buildingType}. `;
-  p += `Architectural style: ${style}. `;
-  p += `Upper floor${floors>1?'s':''}: ${windows>0? `${windows} ${windowStyle} window${windows>1?'s':''} per floor` : `no windows, ${windowStyle}`}, evenly spaced. `;
-  p += `Ground floor: ${groundType}, ${doors} bay${doors>1?'s':''} wide. `;
-  p += `Wall finish: ${material}, painted a shade of ${wallName} (${wallHex.toUpperCase()}). `;
-  p += `Door color: ${trimName} (${trimHex.toUpperCase()}). Window frame color: ${windowFrameName} (${windowFrameHex.toUpperCase()}). Roof color: ${roofName} (${roofHex.toUpperCase()}). Accent/signage color: ${accentName} (${accentHex.toUpperCase()}). `;
-  p += `Roofline: ${roof}. `;
-  p += `Condition: ${wear.toLowerCase()}`;
-  if(details.length) p += `, with ${details.join(', ')}`;
-  p += `. `;
-  p += `Lighting: ${lighting}. `;
-  p += `Full building visible and not cropped, centered in frame — for use as a 3D texture / photogrammetry reference. `;
-  if(notes) p += `${notes}. `;
-  p += `Aspect ratio ${ratio}.`;
+  const s=collectState();
+  $('posOut').textContent = buildPromptFromState(s);
 
-  $('posOut').textContent=p;
-
-  drawPreview(floors,windows,doors,groundType,wallHex,trimHex,windowFrameHex,roofHex,accentHex);
+  const shutters = s.extras.includes('painted shutters flanking the windows');
+  drawPreview({
+    floors:s.floors, winPerFloor:s.windows, doors:s.doors, groundType:s.groundType,
+    wallHex:s.wallHex, trimHex:s.trimHex, windowFrameHex:s.windowFrameHex, roofHex:s.roofHex, accentHex:s.accentHex,
+    shutterHex:s.shutterHex, awningHex:s.awningHex, awningStripeHex:s.awningStripeHex,
+    cornice:s.cornice, balcony:s.balcony, awning:s.awning, shutters
+  });
 }
 
 function update(){ buildPrompt(); }
@@ -914,7 +1268,10 @@ const COLOR_FIELDS=[
   ['trimColor','trimColorName','trimColorHex'],
   ['windowFrameColor','windowFrameColorName','windowFrameColorHex'],
   ['roofColor','roofColorName','roofColorHex'],
-  ['accentColor','accentColorName','accentColorHex']
+  ['accentColor','accentColorName','accentColorHex'],
+  ['shutterColor','shutterColorName','shutterColorHex'],
+  ['awningColor','awningColorName','awningColorHex'],
+  ['awningStripeColor','awningStripeColorName','awningStripeColorHex']
 ];
 COLOR_FIELDS.forEach(([a,b,c])=>{ wireColor(a,b,c); syncColorLabel(a,b,c); });
 
@@ -928,6 +1285,208 @@ $('randomizeColors').addEventListener('click', ()=>{
   });
   update();
 });
+
+// ---- tabs ----
+document.querySelectorAll('#outputTabs .tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#outputTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab=btn.dataset.tab;
+    $('panelSingle').classList.toggle('active', tab==='single');
+    $('panelMulti').classList.toggle('active', tab==='multi');
+  });
+});
+
+// ---- row (multiple buildings) generator ----
+function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function selectOptionValues(id){ return [...$(id).options].map(o=>o.value).filter(v=>v!=='other'); }
+
+document.querySelectorAll('#rowSizeChips .chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('#rowSizeChips .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    $('rowSizeCustom').value='';
+  });
+});
+
+function currentRowSize(){
+  const custom = parseInt($('rowSizeCustom').value);
+  if(custom) return clamp(custom, 2, 16);
+  const active = document.querySelector('#rowSizeChips .chip.active');
+  return active ? parseInt(active.dataset.v) : 5;
+}
+
+function buildRowVariants(size){
+  const varySet = new Set([...document.querySelectorAll('#packVary .chip.active')].map(c=>c.dataset.v));
+  const varyColors = varySet.has('colors');
+  const varyOrnament = varySet.has('ornament');
+  const varyMassing = varySet.has('massing');
+
+  const base = collectState();
+  const corniceOpts = selectOptionValues('cornice');
+  const pedimentOpts = selectOptionValues('pediment');
+  const columnsOpts = selectOptionValues('columns');
+  const balconyOpts = selectOptionValues('balcony');
+  const entranceOpts = selectOptionValues('entrance');
+  const awningOpts = selectOptionValues('awning');
+  const extrasPool = [...document.querySelectorAll('#archExtras .chip')].map(c=>c.dataset.v);
+
+  const items=[];
+  for(let i=0;i<size;i++){
+    const s = {...base};
+    if(varyColors){
+      s.wallHex = randChoice(NAMED_COLORS)[1];
+      s.trimHex = randChoice(NAMED_COLORS)[1];
+      s.windowFrameHex = randChoice(NAMED_COLORS)[1];
+      s.roofHex = randChoice(NAMED_COLORS)[1];
+      s.accentHex = randChoice(NAMED_COLORS)[1];
+      s.shutterHex = randChoice(NAMED_COLORS)[1];
+      s.awningHex = randChoice(NAMED_COLORS)[1];
+      s.awningStripeHex = randChoice(NAMED_COLORS)[1];
+    }
+    if(varyOrnament){
+      s.cornice = randChoice(corniceOpts);
+      s.pediment = randChoice(pedimentOpts);
+      s.columns = randChoice(columnsOpts);
+      s.balcony = randChoice(balconyOpts);
+      s.entrance = randChoice(entranceOpts);
+      s.awning = randChoice(awningOpts);
+      const shuffled = [...extrasPool].sort(()=>Math.random()-0.5);
+      const count = Math.floor(Math.random()*4);
+      s.extras = shuffled.slice(0,count);
+    }
+    if(varyMassing){
+      s.floors = clamp(base.floors + (Math.floor(Math.random()*3)-1), 1, 6);
+      s.windows = clamp(base.windows + (Math.floor(Math.random()*3)-1), 0, 6);
+      s.doors = clamp(base.doors + (Math.floor(Math.random()*3)-1), 1, 5);
+    }
+    s.shopName = base.shopName; // signage only carried on the base template unless notes say otherwise
+    items.push(s);
+  }
+  return items;
+}
+
+function buildRowItemDescriptor(s, idx){
+  const wallName=nearestColorName(s.wallHex).toLowerCase();
+  const trimName=nearestColorName(s.trimHex).toLowerCase();
+  const roofName=nearestColorName(s.roofHex).toLowerCase();
+  const shutters = s.extras.includes('painted shutters flanking the windows');
+  let bits=[];
+  bits.push(`${s.floors}-storey, ${s.windows} window${s.windows!==1?'s':''} per floor`);
+  bits.push(`walls ${wallName} (${s.wallHex.toUpperCase()})`);
+  bits.push(`trim/door ${trimName} (${s.trimHex.toUpperCase()})`);
+  bits.push(`roof ${roofName} (${s.roofHex.toUpperCase()})`);
+  if(s.cornice && !s.cornice.startsWith('none')) bits.push(s.cornice);
+  if(s.pediment && s.pediment!=='none') bits.push(s.pediment);
+  if(s.columns && s.columns!=='none') bits.push(s.columns);
+  if(s.balcony && s.balcony!=='none') bits.push(s.balcony);
+  if(s.awning && s.awning!=='none') bits.push(`${s.awning} (${nearestColorName(s.awningHex).toLowerCase()}/${nearestColorName(s.awningStripeHex).toLowerCase()})`);
+  if(shutters) bits.push(`${nearestColorName(s.shutterHex).toLowerCase()} shutters`);
+  const otherExtras = s.extras.filter(e=>e!=='painted shutters flanking the windows');
+  if(otherExtras.length) bits.push(otherExtras.join(', '));
+  if(idx===0 && s.shopName) bits.push(`signage reading "${s.shopName}"`);
+  return `Building ${idx+1} — ${bits.join(', ')}.`;
+}
+
+function buildRowPromptFromItems(items){
+  const first = items[0];
+  const N = items.length;
+  const ratio = $('ratio').value;
+  let p = `${first.artDesc}. A continuous ${first.view} showing a row of ${N} adjoining ${first.buildingType} facades standing side by side, forming one unbroken street elevation, viewed head-on, sharing a common ground line. `;
+  p += `Architectural style: ${first.style} throughout, with individual variation in color, ornament and signage from building to building. `;
+  p += `Each building is ${first.facadeWidth}, built from ${first.material}, ground floor: ${first.groundType}, entrance type: ${first.entrance}. `;
+  p += `\n\n`;
+  items.forEach((s,idx)=>{ p += buildRowItemDescriptor(s, idx) + '\n'; });
+  p += `\nAll ${N} buildings fully visible in one continuous horizontal strip, not cropped, thin party-wall lines dividing each building, arranged left to right in reading order, evenly lit, for use as a building-pack reference sheet. `;
+  p += `Lighting: ${first.lighting}. Condition: ${first.wear.toLowerCase()}. Aspect ratio ${ratio} (a wide ratio such as 21:9 or 16:9 is recommended to fit the full row).`;
+  return p;
+}
+
+function buildRowBuildingCore(o, unitW){
+  const groundY=280, floorH=52, margin=6;
+  const wallX=margin, wallW=unitW-margin*2;
+  let parts=[];
+  const topY = Math.max(20, groundY - floorH*o.floors - 12);
+  parts.push(`<rect x="${wallX}" y="${topY}" width="${wallW}" height="${groundY-topY}" fill="${o.wallHex}" stroke="#111111" stroke-width="2"/>`);
+  const corniceOrnate = o.cornice && !o.cornice.startsWith('none');
+  parts.push(`<rect x="${wallX-3}" y="${topY-8}" width="${wallW+6}" height="8" fill="${o.roofHex}" stroke="#111111" stroke-width="1.6"/>`);
+  if(corniceOrnate) parts.push(`<rect x="${wallX-5}" y="${topY-13}" width="${wallW+10}" height="5" fill="${o.roofHex}" stroke="#111111" stroke-width="1.2"/>`);
+
+  for(let f=0; f<o.floors; f++){
+    const fy = topY + 8 + f*floorH;
+    const n = Math.max(o.windows,0);
+    const winH = floorH*0.55;
+    if(n>0){
+      const gap = wallW/(n+1);
+      const ww = Math.max(6, Math.min(20, gap-6));
+      for(let i=0;i<n;i++){
+        const wx = wallX + gap*(i+1) - ww/2;
+        parts.push(`<rect x="${wx}" y="${fy}" width="${ww}" height="${winH}" fill="${o.windowFrameHex}" stroke="#111111" stroke-width="1.2"/>`);
+        parts.push(`<line x1="${wx+ww/2}" y1="${fy}" x2="${wx+ww/2}" y2="${fy+winH}" stroke="#FFFFFF" stroke-width="1"/>`);
+        if(o.shutters){
+          parts.push(`<rect x="${wx-5}" y="${fy}" width="4" height="${winH}" fill="${o.shutterHex}"/>`);
+          parts.push(`<rect x="${wx+ww+1}" y="${fy}" width="4" height="${winH}" fill="${o.shutterHex}"/>`);
+        }
+      }
+      if(o.balcony && o.balcony!=='none' && f>0){
+        parts.push(`<line x1="${wallX+6}" y1="${fy+winH+4}" x2="${wallX+wallW-6}" y2="${fy+winH+4}" stroke="${o.trimHex}" stroke-width="2"/>`);
+      }
+    }
+  }
+
+  if(o.awning && o.awning!=='none'){
+    const ay=groundY-56, ah=10, aw=wallW-6;
+    parts.push(`<rect x="${wallX+3}" y="${ay}" width="${aw}" height="${ah}" fill="${o.awningHex}" stroke="#111111" stroke-width="1.2"/>`);
+    const stripes=6;
+    for(let i=0;i<stripes;i+=2) parts.push(`<rect x="${wallX+3+(aw/stripes)*i}" y="${ay}" width="${aw/stripes}" height="${ah}" fill="${o.awningStripeHex}"/>`);
+  } else {
+    parts.push(`<rect x="${wallX+4}" y="${groundY-48}" width="${wallW-8}" height="6" fill="${o.accentHex}"/>`);
+  }
+
+  const gy=groundY-40, gh=40;
+  const dN=Math.max(o.doors,1);
+  const dgap = wallW/(dN+1);
+  for(let i=0;i<dN;i++){
+    const dw=Math.max(10, Math.min(22, dgap-6));
+    const dx = wallX + dgap*(i+1) - dw/2;
+    const fill = o.groundType.includes('roller') ? o.accentHex : o.trimHex;
+    parts.push(`<rect x="${dx}" y="${gy}" width="${dw}" height="${gh}" fill="${fill}" stroke="#111111" stroke-width="1.4"/>`);
+  }
+
+  parts.push(`<line x1="${unitW}" y1="${topY-13}" x2="${unitW}" y2="${groundY}" stroke="#111111" stroke-width="1.4"/>`);
+  return parts.join('');
+}
+
+function buildRowSVG(items){
+  const unitW=200, H=340;
+  const totalW = items.length*unitW;
+  let parts=[`<rect x="0" y="0" width="${totalW}" height="${H}" fill="#FFFFFF"/>`,
+              `<line x1="0" y1="280" x2="${totalW}" y2="280" stroke="#111111" stroke-width="2.4"/>`];
+  items.forEach((s,idx)=>{
+    const shutters = s.extras.includes('painted shutters flanking the windows');
+    const core = buildRowBuildingCore({...s, shutters}, unitW);
+    parts.push(`<g transform="translate(${idx*unitW},0)">${core}</g>`);
+  });
+  return {inner:parts.join(''), width:totalW, height:H};
+}
+
+function generateRow(){
+  const size = currentRowSize();
+  const items = buildRowVariants(size);
+  const prompt = buildRowPromptFromItems(items);
+  $('rowOut').textContent = prompt;
+  $('rowCountLabel').textContent = `Prompt — row of ${size}`;
+
+  const {inner,width,height} = buildRowSVG(items);
+  const svg = $('rowSvgPreview');
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.innerHTML = inner;
+  $('rowPreviewWrap').style.display='block';
+}
+
+$('generateRow').addEventListener('click', generateRow);
+$('copyRowOut').addEventListener('click', ()=>copyText($('copyRowOut'), $('rowOut').textContent));
 
 applyRegionPreset($('style').value);
 update();
